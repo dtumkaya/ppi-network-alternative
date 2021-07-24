@@ -129,11 +129,15 @@ def mainPDBMonomerExtractor(allPDBFilesDirectory, generatedPDBFilesDirectory, ge
 	pdbDict = {}
 	geneIDToPDBMappingFile = open(geneIDToPDBMappingFileDirectory, 'r')
 	for geneIDLine in geneIDToPDBMappingFile:
-		splittedGeneIDLine = geneIDLine.strip().split('\t')
+
+		splittedGeneIDLine = geneIDLine.strip().split(' ')
+		#print(splittedGeneIDLine)
 		if len(splittedGeneIDLine) > 1:
 			splittedPDBEntries = splittedGeneIDLine[1].split(';')
+			#print(splittedPDBEntries)
 			for pdbEntry in splittedPDBEntries:
 				pdbEntryList = pdbEntry.strip().split(':')
+				#print(pdbEntryList)
 				if len(pdbEntryList) > 1:
 					chainID = pdbEntryList[1]
 				else:
@@ -145,7 +149,7 @@ def mainPDBMonomerExtractor(allPDBFilesDirectory, generatedPDBFilesDirectory, ge
 					pdbDict[pdbEntryList[0]][chainID] = 1
 					
 	geneIDToPDBMappingFile.close()
-			
+	#print(pdbDict)
 	generateMonomerPDBFiles(allPDBFilesDirectory, generatedPDBFilesDirectory, pdbDict, generateMonomerPDBFilesLogFileDirectory, numberOfProcesses)
 			
 	t2 = time.time()

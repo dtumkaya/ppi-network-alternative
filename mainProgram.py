@@ -38,7 +38,7 @@ if not os.path.exists(logFileDirectory):
 generatedPDBFilesDirectory = 'generatedPDBFiles'
 geneIDToPDBMappingFileDirectory = 'usedGeneIDToPDBMapping.txt'
 generateMonomerPDBFilesLogFileDirectory = '%s/generateMonomerPDBFilesLogs_%s.txt' %(logFileDirectory, timeStamp)
-numberOfProcesses = 20
+numberOfProcesses = 62
 mainPDBMonomerExtractor(allPDBFilesDirectory, generatedPDBFilesDirectory, geneIDToPDBMappingFileDirectory, generateMonomerPDBFilesLogFileDirectory, numberOfProcesses)
 print('\n Monomer extraction completed.')
 

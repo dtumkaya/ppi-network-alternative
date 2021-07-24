@@ -94,12 +94,12 @@ def TMAlignRunWork(taskQueue_TMAlignDict, TMAlignGeneIDResultsFileDirectory, TMA
 							while True:
 								proc.poll()
 								try:
-									outtmp = stdout[0].recv(4096)
+									outtmp = stdout[0].recv(4096).decode("UTF-8")
 								except socket.timeout as exc:
 									outtmp = ''
 								outputMessage = outputMessage + outtmp
 								try:
-									errtmp = stderr[0].recv(4096)
+									errtmp = stderr[0].recv(4096).decode("UTF-8")
 								except socket.timeout as exc:
 									errtmp = ''
 								errorMessage = errorMessage + errtmp
@@ -115,10 +115,10 @@ def TMAlignRunWork(taskQueue_TMAlignDict, TMAlignGeneIDResultsFileDirectory, TMA
 								TMAlignErrorText = 'Error: TMAlign: %s %s.\n' %(alignmentKey, errorMessage.strip())
 								TMAlignErrorQueue.put(TMAlignErrorText)
 							if outputMessage:
-								#resultFileDirectory = '%s/%s_TMAlignResult.txt'  %(TMAlignResultsFileDirectory, alignmentKey)
-								#resultFile = open(resultFileDirectory, 'w')
-								#resultFile.write(outputMessage)
-								#resultFile.close()
+								resultFileDirectory = '%s/%s_TMAlignResult.txt'  %(TMAlignResultsFileDirectory, alignmentKey)
+								resultFile = open(resultFileDirectory, 'w')
+								resultFile.write(outputMessage)
+								resultFile.close()
 								structureLength_A, structureLength_B, alignedLength, RMSD, TMScoreNormalized_A, TMScoreNormalized_B = TMAlignResultReader(outputMessage, pdbID_1, pdbID_2)
 								minStructureLength = structureLength_A
 								if minStructureLength > structureLength_B:
@@ -149,7 +149,7 @@ def mainTMAlignDriverForStructures(geneIDToPDBMappingFileDirectory, TMAlignGeneI
 	geneIDDict = {}
 	geneIDToPDBMappingFile = open(geneIDToPDBMappingFileDirectory, 'r')
 	for geneIDLine in geneIDToPDBMappingFile:
-		splittedGeneIDLine = geneIDLine.strip().split('\t')
+		splittedGeneIDLine = geneIDLine.strip().split(' ')
 		if len(splittedGeneIDLine) > 1:
 			geneID = splittedGeneIDLine[0]
 			splittedPDBEntries = splittedGeneIDLine[1].split(';')

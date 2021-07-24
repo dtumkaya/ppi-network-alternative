@@ -21,7 +21,7 @@ def geneIDTOPDBMappingFileReader(geneIDToPDBMappingFileDirectory):
 	geneIDDict = {}
 	geneIDToPDBMappingFile = open(geneIDToPDBMappingFileDirectory, 'r')
 	for geneIDLine in geneIDToPDBMappingFile:
-		splittedGeneIDLine = geneIDLine.strip().split('\t')
+		splittedGeneIDLine = geneIDLine.strip().split(' ')
 		if len(splittedGeneIDLine) > 1:
 			geneID = splittedGeneIDLine[0]
 			splittedPDBEntries = splittedGeneIDLine[1].split(';')
@@ -113,7 +113,7 @@ def pdbClustererForGeneIDRunWork(taskQueue_geneID, geneIDResultQueue, generatedP
 					maxEdgeWeight = -1
 					maxEdgeNodes = []
 					nodesToCombine = 0
-					for edge in pdbSimilarityNetwork.edges_iter():
+					for edge in pdbSimilarityNetwork.edges():
 						edgeWeight = pdbSimilarityNetwork[edge[0]][edge[1]]['weight']
 						if edgeWeight == 1:
 							maxEdgeWeight = edgeWeight
@@ -153,7 +153,7 @@ def pdbClustererForGeneIDRunWork(taskQueue_geneID, geneIDResultQueue, generatedP
 						pdbSimilarityNetwork.remove_node(discardedMonomer)	
 				geneIDResultText = '%s\t%d' %(geneID, pdbSimilarityNetwork.number_of_nodes())
 				pdbMonomerCounter = 0
-				for pdbNode in pdbSimilarityNetwork.nodes_iter():
+				for pdbNode in pdbSimilarityNetwork.nodes():
 					if pdbMonomerCounter == 0:
 						geneIDResultText = '%s\t%s' %(geneIDResultText, pdbNode)
 					else:
