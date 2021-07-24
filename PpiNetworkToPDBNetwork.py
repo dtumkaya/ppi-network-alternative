@@ -3,50 +3,32 @@ import time
 
 t1 = time.time()
 
-geneIdNetworkFile = open('PPI_Network.txt', 'r')
+#geneIdNetworkFile = open('PPI_Network.txt', 'r')
 PdbNetworkFile = open('PDB_Network.txt', 'w')
 alternativeConformationsFile = open('clusteredGeneIDToPDBMapping.txt', 'r')
-alternativeConformations = alternativeConformationsFile.readlines();
+alternativeConformations = alternativeConformationsFile.readlines()
 alternativeConformationsFile.close()
 
+alternativeConfs = []
 
-for PPI in geneIdNetworkFile:
-        
-        splittedPPI = PPI.split(' ')
-        protein1 = splittedPPI[0]
-        protein2 = splittedPPI[2][:-2]
-        #print(protein1)
-        #print(protein2)
-        alternativeConfs1 = []
-        alternativeConfs2 = []
-        found1 = False
-        found2 = False
+for geneId in alternativeConformations:
+        alternativeConf = []
+        splittedGeneId = geneId.split('\t')
+        if len(splittedGeneId) > 2:
+                alternativeConfs = splittedGeneId[2].split(',')
+                for i in range(0, int(splittedGeneId[1])):
+                        alternativeConf.append(alternativeConfs[i][:4] + alternativeConfs[i][5:6])
+                print(alternativeConf)
 
-        for geneId in alternativeConformations:
-                
-                splittedGeneId = geneId.split('\t')
-                #print(splittedGeneId[1])
-                if len(splittedGeneId) > 2:
-                        alternativeConfs = splittedGeneId[2].split(',')
-                
-                        if splittedGeneId[0] == protein1:
-                                for i in range(0, int(splittedGeneId[1])):
-                                        alternativeConfs1.append(alternativeConfs[i][:4] + alternativeConfs[i][5:6])
-                                found1 = True
-                        
-                        elif splittedGeneId[0] == protein2:
-                                for i in range(0, int(splittedGeneId[1])):
-                                        alternativeConfs2.append(alternativeConfs[i][:4] + alternativeConfs[i][5:6])
-                                found2 = True
-                        
-                if found1 and found2:
-                        for alternativeConf1 in alternativeConfs1:
-                                for alternativeConf2 in alternativeConfs2:
-                                        PdbNetworkFile.write(alternativeConf1 + ' ' + alternativeConf2 + '\n')
-                                        #print(alternativeConf1 + ' ' + alternativeConf2 + '\n')
-                        break
+                for i in range(len(alternativeConf)):
+                        for j in range(len(alternativeConf)):
+                                if (alternativeConf[i] == alternativeConf[j]):
+                                        break
+                                else:
+                                        print(alternativeConf[i] + ' ' + alternativeConf[j])
+                                        PdbNetworkFile.write(alternativeConf[i] + ' ' + alternativeConf[j] + "\n")
+
 
 PdbNetworkFile.close()
-geneIdNetworkFile.close()
 t2 = time.time()
 print('Elapsed time = %f' %(t2-t1))
